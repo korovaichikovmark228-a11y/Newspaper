@@ -4,7 +4,7 @@
    News data: network-first, fall back to cache (fresh when online).
    ============================================================ */
 
-const VERSION = 'v1';
+const VERSION = 'v2';
 const SHELL_CACHE = `startup-times-shell-${VERSION}`;
 const DATA_CACHE  = `startup-times-data-${VERSION}`;
 
@@ -45,20 +45,22 @@ self.addEventListener('fetch', event => {
   if (req.method !== 'GET') return;
 
   const url = new URL(req.url);
-  const isData = url.pathname.endsWith('/data/news.json') ||
-                 url.pathname.endsWith('news.json');
+  // Any JSON under /data/ (today's issue, archive index, archived issues).
+  const isData = url.pathname.includes('/data/') && url.pathname.endsWith('.json');
 
   if (isData) {
-    // Network-first for the daily issue.
+    // Network-first: fresh when online, cached copy when offline.
+    // Key by pathname (ignoring ?v= cache-buster) so lookups always hit.
+    const key = url.origin + url.pathname;
     event.respondWith(
       fetch(req)
         .then(res => {
           const copy = res.clone();
-          caches.open(DATA_CACHE).then(c => c.put('./data/news.json', copy));
+          caches.open(DATA_CACHE).then(c => c.put(key, copy));
           return res;
         })
         .catch(() =>
-          caches.match('./data/news.json').then(r => r || caches.match(req))
+          caches.match(key).then(r => r || caches.match(req))
         )
     );
     return;
