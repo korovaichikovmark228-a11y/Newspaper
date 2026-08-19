@@ -5,7 +5,7 @@
    ============================================================ */
 
 const APP_PREFIX = 'startup-times-';
-const VERSION = 'v2';
+const VERSION = 'v3';
 const SHELL_CACHE = `${APP_PREFIX}shell-${VERSION}`;
 const DATA_CACHE  = `${APP_PREFIX}data-${VERSION}`;
 

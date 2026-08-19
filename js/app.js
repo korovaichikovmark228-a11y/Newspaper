@@ -266,10 +266,12 @@ async function viewArchivedIssue(date) {
 async function load(forceNetwork) {
   const banner = document.getElementById('offline-banner');
   try {
+    // Always fetch fresh: bypass the browser HTTP cache (GitHub Pages sets
+    // max-age=600, which would otherwise show a stale issue for ~10 min).
+    // Offline still works: the Service Worker serves its cached copy, and
+    // the catch below falls back to localStorage.
     const url = DATA_URL + '?v=' + Date.now();
-    const res = await fetch(forceNetwork ? url : DATA_URL, {
-      cache: forceNetwork ? 'reload' : 'default'
-    });
+    const res = await fetch(url, { cache: 'reload' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const data = await res.json();
     localStorage.setItem(CACHE_KEY, JSON.stringify(data));
