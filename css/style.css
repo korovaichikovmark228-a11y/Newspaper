@@ -263,6 +263,28 @@ body::before {
 }
 .article .source::before { content: "▸ "; }
 
+/* ---------- Article photo ---------- */
+.art-photo {
+  margin: 0 0 10px;
+  break-inside: avoid;
+}
+.art-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--rule);
+  filter: grayscale(0.15) contrast(1.02);
+  background: var(--paper-edge);
+}
+.art-photo figcaption {
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--ink-faint);
+  padding: 4px 2px 0;
+  line-height: 1.3;
+}
+.article.lead .art-photo { margin-bottom: 12px; }
+
 /* ---------- Footer ---------- */
 .paper-footer {
   margin-top: 30px;

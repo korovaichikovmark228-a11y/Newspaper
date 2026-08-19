@@ -51,12 +51,21 @@ function articleHTML(a, isLead) {
 
   const bodyHTML = paragraphs(a.body).map(p => `<p>${esc(p)}</p>`).join('');
 
+  // Optional article image (best-effort: shows online; hides itself if it fails to load).
+  const img = /^https?:\/\//.test(a.image || '')
+    ? `<figure class="art-photo">
+         <img src="${esc(a.image)}" alt="" loading="lazy" referrerpolicy="no-referrer"
+              onerror="this.closest('figure').remove()">
+         ${a.caption ? `<figcaption>${esc(a.caption)}</figcaption>` : ''}
+       </figure>`
+    : '';
+
   if (isLead) {
     return `<article class="article lead">
       ${kicker}
       <h3 class="headline">${esc(a.headline)}</h3>
       <div class="lead-grid">
-        <div>${subhead}${byline}</div>
+        <div>${img}${subhead}${byline}</div>
         <div class="body">${bodyHTML}${source}</div>
       </div>
     </article>`;
@@ -65,6 +74,7 @@ function articleHTML(a, isLead) {
   return `<article class="article">
     ${kicker}
     <h3 class="headline">${esc(a.headline)}</h3>
+    ${img}
     ${subhead}
     ${byline}
     <div class="body">${bodyHTML}${source}</div>
