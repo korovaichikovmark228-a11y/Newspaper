@@ -113,6 +113,11 @@ body::before {
   border-bottom: 1px solid var(--rule);
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--paper);
+  backdrop-filter: saturate(1.2);
 }
 .section-nav::-webkit-scrollbar { display: none; }
 .section-nav button {
@@ -318,4 +323,63 @@ body::before {
   font-size: 14px;
   color: var(--ink-soft);
   text-align: center;
+}
+
+/* ============================================================
+   MOBILE / iPhone  (≤ 600px)
+   ============================================================ */
+@media (max-width: 600px) {
+  .wrap { padding: 12px 14px 72px; }
+
+  /* Masthead: tighter, tagline hidden to avoid cramped 3-across */
+  .masthead .kicker-row { font-size: 9.5px; letter-spacing: 0.03em; }
+  .masthead .kicker-row .center { display: none; }
+  .masthead h1 {
+    font-size: clamp(34px, 13vw, 60px);
+    letter-spacing: -0.02em;
+    margin: 6px 0 8px;
+  }
+  /* Dateline stacks cleanly instead of squeezing 3 items in a row */
+  .masthead .dateline {
+    flex-direction: column;
+    gap: 2px;
+    text-align: center;
+    font-size: 10px;
+    padding: 7px 2px;
+  }
+
+  /* Sticky nav gets a soft edge so it reads as a bar while scrolling */
+  .section-nav {
+    margin: 0 -14px 14px;
+    padding: 8px 14px;
+    box-shadow: 0 6px 10px -8px rgba(0,0,0,.25);
+  }
+  .section-nav button { font-size: 12.5px; padding: 7px 13px; } /* bigger tap target */
+
+  .section-head h2 { font-size: 18px; }
+
+  /* Single column everywhere on phones */
+  .articles { column-count: 1 !important; }
+
+  .article .headline { font-size: 21px; }
+  .article.lead .headline { font-size: clamp(24px, 8vw, 32px); }
+  .article .body p { font-size: 16px; text-align: left; } /* left-align reads better on narrow */
+  .article .body p:first-of-type::first-letter {
+    font-size: 2.8em;
+    padding: 4px 6px 0 0;
+  }
+  .article.lead .lead-grid { grid-template-columns: 1fr; }
+
+  .source { padding: 3px 0; } /* easier to tap */
+}
+
+/* Very small / older iPhones */
+@media (max-width: 360px) {
+  .masthead h1 { font-size: 32px; }
+  .article .body p { font-size: 15.5px; }
+}
+
+/* Standalone (installed) PWA tweak — a touch more top breathing room */
+@media (display-mode: standalone) {
+  .wrap { padding-top: 8px; }
 }
