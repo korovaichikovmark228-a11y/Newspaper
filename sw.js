@@ -4,9 +4,10 @@
    News data: network-first, fall back to cache (fresh when online).
    ============================================================ */
 
+const APP_PREFIX = 'startup-times-';
 const VERSION = 'v2';
-const SHELL_CACHE = `startup-times-shell-${VERSION}`;
-const DATA_CACHE  = `startup-times-data-${VERSION}`;
+const SHELL_CACHE = `${APP_PREFIX}shell-${VERSION}`;
+const DATA_CACHE  = `${APP_PREFIX}data-${VERSION}`;
 
 // Paths are relative to the SW scope, so this works on GitHub Pages subpaths.
 const SHELL_ASSETS = [
@@ -33,7 +34,8 @@ self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
-        keys.filter(k => k !== SHELL_CACHE && k !== DATA_CACHE)
+        // Only delete OUR OWN old caches — never another app's on this origin.
+        keys.filter(k => k.startsWith(APP_PREFIX) && k !== SHELL_CACHE && k !== DATA_CACHE)
             .map(k => caches.delete(k))
       )
     ).then(() => self.clients.claim())
